@@ -2,8 +2,8 @@
 #include<conio.h>
 #include<string.h>
 void pass1();
-void opcodetally();
-int locctr,initial_address,program_length,o,operand;
+void chkopcode();
+int locctr,sa,program_length,o,op1;
 char opcode[20],label[20],op[20],otp[20];
 void pass1()
 {
@@ -11,13 +11,12 @@ void pass1()
     FILE *f1,*f2,*f4;
      f1=fopen("input.txt","r");
     f2=fopen("symtab.txt","w");
-    printf("LOCATION\tLABEL\tOPERAND\tOPCODE");
-    fscanf(f1,"%s%s%d",label,opcode,&operand);
+    fscanf(f1,"%s%s%d",label,opcode,&op1);
     if(strcmp(opcode,"START")==0)
     {
-        initial_address=operand;
-        locctr=initial_address;
-        printf("%s\t%s\t%d\t\n",label,opcode,operand);
+        sa=op1;
+        locctr=sa;
+        printf("%s\t%d\t%d\t\n",label,opcode,op1);
     }
     else
     locctr=0;
@@ -29,21 +28,20 @@ void pass1()
     if(strcmp(label,"-")!=0)
     {
         fprintf(f2,"\n%d\t%s\n",locctr,label);
-
     }
-    opcodetally();
+    chkopcode();
     fscanf(f1,"%s%s",label,opcode);
     }
     if(strcmp(opcode,"END")==0)
     {
-        program_length=locctr-initial_address;
+        program_length=locctr-sa;
     }
     f4=fopen("length.txt","w");
     fprintf(f4,"%d",program_length);
     fclose(f1);
     fclose(f2);
 }
-void opcodetally()
+void chkopcode()
 {
     FILE *f3;
      f3=fopen("optab.txt","r");
@@ -64,8 +62,8 @@ void opcodetally()
     }
     else if(strcmp(opcode,"RESW")==0)
     {
-        operand=atoi(op);
-        locctr=locctr+(3*operand);
+        op1=atoi(op);
+        locctr=locctr+(3*op1);
     }
     else if(strcmp(opcode,"BYTE")==0)
     {
@@ -73,13 +71,13 @@ void opcodetally()
             locctr=locctr+1;
         else
         {
-            operand=strlen(op)-2;
-            locctr=locctr+operand;}
+            program_length=strlen(op)-2;
+            locctr=locctr+program_length;}
         }
         else if(strcmp(opcode,"RESB")==0)
                 {
-                    operand=atoi(op);
-                    locctr=locctr+operand;
+                    op1=atoi(op);
+                    locctr=locctr+op;
                 }
 }
 int main()
